@@ -1,0 +1,61 @@
+DBはPostgreSQLで、既存で、レイアウトは以下
+
+DBの接続先は、.envで作成して。
+初期値は、
+Server: localhost
+Database: tamtdb
+Port: 5432
+Username: tamtuser
+Password: TAMTTAMT
+にして
+
+pythonで、型ヒント句付けて
+cronで定期的に実行することを想定しています。
+
+テーブル
+Table "public.schedules"
+        Column        |            Type             | Collation | Nullable |                Default
+----------------------+-----------------------------+-----------+----------+---------------------------------------
+ id                   | integer                     |           | not null | nextval('schedules_id_seq'::regclass)
+ title                | character varying           |           | not null |
+ start_datetime       | timestamp without time zone |           | not null |
+ duration             | integer                     |           | not null |
+ is_all_day           | boolean                     |           | not null |
+ activity_category_id | integer                     |           | not null |
+ schedule_type        | character varying           |           | not null |
+ location             | character varying           |           |          |
+ details              | text                        |           |          |
+ is_todo_completed    | boolean                     |           | not null |
+ is_deleted           | boolean                     |           | not null |
+ created_at           | timestamp without time zone |           | not null | now()
+ updated_at           | timestamp without time zone |           | not null | now()
+ routine_id           | integer                     |           |          |
+ notified             | boolean                     |           | not null | false
+
+
+通知対象を検索して、通知する。
+通知対象は、以下の条件をすべて満たすこと。
+
+条件
+　schedule_type='TODO'
+　is_todo_completed=false
+　is_deleted=false
+　notified=false
+　is_all_day=false
+　start_datetimeが、現在時刻+3分よりも過去
+
+通知を行ったら、notifiedをtrueで更新する
+
+通知内容は、
+通知のusername  = 'y-toyama'で固定
+通知のtitle = DBのtitle
+通知のmessage = DBのstart_datetimeをhh:mm + '～' + DBのstart_datetimeにduration(分)を足した時刻のhh:mm
+通知のurl = 'https://tym-portal.net/mobile/schedule/?a=n' nの部分は乱数
+
+POST先は、http://localhost:8999/auth/notice
+
+他は、API_NOTICE_SPEC.mdを参照して。
+
+
+
+
