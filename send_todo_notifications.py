@@ -68,7 +68,7 @@ def load_settings() -> Settings:
         db_port=db_port,
         db_user=os.getenv("DB_USER", "tamtuser"),
         db_password=os.getenv("DB_PASSWORD", "TAMTTAMT"),
-        notice_api_url=os.getenv("NOTICE_API_URL", "http://localhost:8999/auth/notice"),
+        notice_api_url=os.getenv("NOTICE_API_URL", "http://localhost:8999/notice"),
     )
 
 
