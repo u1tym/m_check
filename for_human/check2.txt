@@ -1,0 +1,24 @@
+通知を出す処理を実装済みの状態。
+以下２点、変更して欲しい。
+
+
+１．通知を出す条件
+　schedule_type='TODO'としていたが、この条件を外す。
+　通知のusernameを固定にしていたが、テーブル schedules.aid=accounts.idを条件に取得したレコードのusernameを使う
+
+２．メールを出す機能を追加
+　条件は以下のすべてを満たす
+　is_todo_completed=false
+　is_deleted=false
+　emailed=false
+　is_all_day=false
+　start_datetimeが、現在時刻+5分よりも過去
+
+　メールを送信したら、emailedをtrueで更新する
+
+　メール送信処理は、send_mail.pyを流用して欲しい。
+　送信先メールアドレスは、テーブル schedules.aid=accounts.idを条件に取得したレコードのemail
+　件名は、schedules.title
+　本文は、schedules.title、schedules.start_datetime、duration(分)から、hh:mm～hh:mm形式の時間
+
+不明点はある？
