@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 import secrets
+from logging.handlers import TimedRotatingFileHandler
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -58,7 +59,13 @@ def setup_logging() -> None:
         level=logging.INFO,
         format="%(asctime)s %(levelname)s %(message)s",
         handlers=[
-            logging.FileHandler(log_file_path, encoding="utf-8"),
+            TimedRotatingFileHandler(
+                filename=str(log_file_path),
+                when="midnight",
+                interval=1,
+                backupCount=30,
+                encoding="utf-8",
+            ),
             logging.StreamHandler(),
         ],
     )
